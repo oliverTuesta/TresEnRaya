@@ -99,6 +99,7 @@ class Bot (val txtVictoriasBot: TextView){
          */
         if (atacar(checkBoxes).size != 1) {
             rango = atacar(checkBoxes)
+            println("ataque")
         }else {
             rango = defender(checkBoxes)
         }
@@ -111,7 +112,6 @@ class Bot (val txtVictoriasBot: TextView){
             }
         } while (checkBoxes[numRandom].isChecked || marcadasBot[numRandom])
         jugada = numRandom
-        println("jugada: "+jugada)
         return jugada
     }
     fun atacar(checkBoxes: ArrayList<CheckBox>): Array<Int>{
@@ -140,7 +140,7 @@ class Bot (val txtVictoriasBot: TextView){
             rango = arrayOf(0, 3, 6)
         } else if (marcadasBot[6] && marcadasBot[7] && !checkBoxes[8].isChecked
             || marcadasBot[6] && marcadasBot[8] && !checkBoxes[7].isChecked
-            || marcadasBot[7] && marcadasBot[8] && !checkBoxes[8].isChecked
+            || marcadasBot[7] && marcadasBot[8] && !checkBoxes[6].isChecked
         ) {
             rango = arrayOf(6, 7, 8)
         } else if (marcadasBot[3] && marcadasBot[4] && !checkBoxes[5].isChecked
@@ -198,18 +198,18 @@ class Bot (val txtVictoriasBot: TextView){
             || checkBoxes[0].isChecked && checkBoxes[2].isChecked && i >= 2 && !marcadasBot[1]
             || checkBoxes[1].isChecked && checkBoxes[2].isChecked && i >= 2 && !marcadasBot[0]) {
             rango = arrayOf(0, 1, 2)
-        }else if (i >= 2 && checkBoxes[4].isChecked && checkBoxes[8].isChecked && !marcadasBot[0]         // evitar diagonal 1
-            || checkBoxes[4].isChecked && checkBoxes[0].isChecked && i >= 2 && !marcadasBot[8]
-            || checkBoxes[0].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[4]) {
+        }else if (i >= 2 && checkBoxes[0].isChecked && checkBoxes[4].isChecked && !marcadasBot[8]         // evitar diagonal 1
+            || checkBoxes[0].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[4]
+            || checkBoxes[4].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[0]) {
             rango = arrayOf(0, 4, 8)
         }else if (i >= 2 && checkBoxes[2].isChecked && checkBoxes[4].isChecked && !marcadasBot[6]         // evitar diagonal 2
             || checkBoxes[2].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[4]
             || checkBoxes[4].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[2]){
             rango = arrayOf(2, 4, 6)
-        }else if (i == 2 && checkBoxes[0].isChecked && checkBoxes[4].isChecked && !marcadasBot[8]
-            || checkBoxes[8].isChecked && checkBoxes[4].isChecked && i == 2 && !marcadasBot[0]
-            || checkBoxes[2].isChecked && checkBoxes[4].isChecked && i == 2 && !marcadasBot[6]
-            || checkBoxes[4].isChecked && checkBoxes[6].isChecked && i == 2 && !marcadasBot[2]){
+        }else if (i == 2 && checkBoxes[0].isChecked && checkBoxes[4].isChecked && marcadasBot[8]
+            || checkBoxes[8].isChecked && checkBoxes[4].isChecked && i == 2 && marcadasBot[0]
+            || checkBoxes[2].isChecked && checkBoxes[4].isChecked && i == 2 && marcadasBot[6]
+            || checkBoxes[4].isChecked && checkBoxes[6].isChecked && i == 2 && marcadasBot[2]){
             rango = arrayOf(0,2,6,8)
         }
         return rango

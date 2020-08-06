@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
             , checkBox7, checkBox8, checkBox9
         )
         val bot:Bot = Bot(txtVictoriasBot)
-        btnReiniciar.setOnClickListener { reiniciar(checkboxes, txtResult, bot) }
+        btnReiniciar.setOnClickListener { reiniciar(checkboxes, txtVictorias, txtVictoriasBot, bot) }
         btnNewGame.setOnClickListener { newGame(checkboxes, txtResult, bot) }
         checkBox1.setOnClickListener {
             if (checkBox2.isChecked && checkBox3.isChecked
@@ -156,11 +156,12 @@ class MainActivity : AppCompatActivity() {
                 checkBox.isClickable = true
             }
         }
-    fun reiniciar(checkBoxes: ArrayList<CheckBox>, txtResult: TextView, bot: Bot) {
-        txtResult.text = ""
+    fun reiniciar(checkBoxes: ArrayList<CheckBox>, txtVictorias: TextView, txtVictoriasBot: TextView, bot: Bot) {
         bot.marcadasBot =  arrayOf<Boolean>(false, false, false, false, false, false, false, false, false)
-        bot.victoriasBot = 0
         victorias = 0
+        bot.victoriasBot = 0
+        txtVictorias.text = ""+victorias
+        txtVictoriasBot.text = ""+bot.victoriasBot
         for (x in 0..8) {
             checkBoxes[x].visibility = View.VISIBLE
             checkBoxes[x].isChecked = false

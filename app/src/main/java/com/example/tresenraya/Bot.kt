@@ -96,6 +96,25 @@ class Bot (val btnReiniciar: Button){
         /**
          * atque
          */
+        if (atacar(checkBoxes).size != 1) {
+            rango = atacar(checkBoxes)
+        }else {
+            rango = defender(checkBoxes)
+        }
+        do {
+            numRandom = rango.random()
+            z++
+            if (z > 15) {
+                numRandom = (0..8).random()
+                continue
+            }
+        } while (checkBoxes[numRandom].isChecked || marcadasBot[numRandom])
+        jugada = numRandom
+        println("jugada: "+jugada)
+        return jugada
+    }
+    fun atacar(checkBoxes: ArrayList<CheckBox>): Array<Int>{
+        var rango = arrayOf(0)
         if (marcadasBot[2] && marcadasBot[4] && !checkBoxes[6].isChecked
             || marcadasBot[2] && marcadasBot[6] && !checkBoxes[4].isChecked
             || marcadasBot[4] && marcadasBot[6] && !checkBoxes[2].isChecked) {
@@ -130,22 +149,10 @@ class Bot (val btnReiniciar: Button){
             rango = arrayOf(3, 4, 5)
         } else if (marcadasBot[0] && marcadasBot[1] && !checkBoxes[2].isChecked
             || marcadasBot[0] && marcadasBot[2] && !checkBoxes[1].isChecked
-            || marcadasBot[1] && marcadasBot[2] && !checkBoxes[0].isChecked
-        ) {
+            || marcadasBot[1] && marcadasBot[2] && !checkBoxes[0].isChecked) {
             rango = arrayOf(0, 1, 2)
-        }else {
-            rango = defender(checkBoxes)
         }
-        do {
-            numRandom = rango.random()
-            z++
-            if (z > 15) {
-                numRandom = (0..8).random()
-                continue
-            }
-        } while (checkBoxes[numRandom].isChecked || marcadasBot[numRandom])
-        jugada = numRandom
-        return jugada
+        return rango
     }
 
     fun defender(checkBoxes: ArrayList<CheckBox>): Array<Int>{
@@ -156,7 +163,10 @@ class Bot (val btnReiniciar: Button){
             }
         }
         var rango = arrayOf(0,1,2,3,4,5,6,7,8)
-        if (checkBoxes[0].isChecked && i==1 || checkBoxes[2].isChecked && i==1 // si empieza en una esquina
+        if (i == 2 && checkBoxes[0].isChecked && checkBoxes[8].isChecked
+            || i == 2 && checkBoxes[2].isChecked && checkBoxes[6].isChecked){
+            rango = arrayOf(1,3,5,7)
+        }else if (checkBoxes[0].isChecked && i==1 || checkBoxes[2].isChecked && i==1 // si empieza en una esquina
             || checkBoxes[6].isChecked && i==1|| checkBoxes[8].isChecked&& i==1){
             rango = arrayOf(4)
         }else if (checkBoxes[1].isChecked && i==1 || checkBoxes[3].isChecked && i==1 //si no empieza en una esquina
@@ -164,42 +174,40 @@ class Bot (val btnReiniciar: Button){
             rango= arrayOf(4)
         }else if (checkBoxes[4].isChecked && i < 2){                                   //si empieza en el centro
             rango = arrayOf(0, 2, 6, 8)
-        }else if (i >= 2 && checkBoxes[2].isChecked && checkBoxes[5].isChecked         // evitar 3ra linea vertical
-            || checkBoxes[2].isChecked && checkBoxes[8].isChecked && i >= 2
-            || checkBoxes[5].isChecked && checkBoxes[8].isChecked && i >= 2){
+        }else if (i >= 2 && checkBoxes[2].isChecked && checkBoxes[5].isChecked && !marcadasBot[8]         // evitar 3ra linea vertical
+            || checkBoxes[2].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[8]
+            || checkBoxes[5].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[8]){
             rango = arrayOf(2, 5, 8)
-        }else if (i >= 2 && checkBoxes[1].isChecked && checkBoxes[4].isChecked          // evitar 2da linea vertical
-            || checkBoxes[1].isChecked && checkBoxes[7].isChecked && i >= 2
-            || checkBoxes[4].isChecked && checkBoxes[7].isChecked && i >= 2){
+        }else if (i >= 2 && checkBoxes[1].isChecked && checkBoxes[4].isChecked && !marcadasBot[7]         // evitar 2da linea vertical
+            || checkBoxes[1].isChecked && checkBoxes[7].isChecked && i >= 2 && !marcadasBot[7]
+            || checkBoxes[4].isChecked && checkBoxes[7].isChecked && i >= 2 && !marcadasBot[1]){
             rango = arrayOf(1, 4, 7)
-        }else if (i >= 2 && checkBoxes[0].isChecked && checkBoxes[3].isChecked          // evitar 1ra linea vertical
-            || checkBoxes[0].isChecked && checkBoxes[6].isChecked && i >= 2
-            || checkBoxes[3].isChecked && checkBoxes[6].isChecked && i >= 2){
+        }else if (i >= 2 && checkBoxes[0].isChecked && checkBoxes[3].isChecked  && !marcadasBot[6]        // evitar 1ra linea vertical
+            || checkBoxes[0].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[3]
+            || checkBoxes[3].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[0]){
             rango = arrayOf(0, 3, 6)
-        }else if (i >= 2 && checkBoxes[6].isChecked && checkBoxes[7].isChecked          // evitar 3ra linea horizontal
-            || checkBoxes[6].isChecked && checkBoxes[8].isChecked && i >= 2
-            || checkBoxes[7].isChecked && checkBoxes[8].isChecked && i >= 2){
+        }else if (i >= 2 && checkBoxes[6].isChecked && checkBoxes[7].isChecked && !marcadasBot[8]         // evitar 3ra linea horizontal
+            || checkBoxes[6].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[7]
+            || checkBoxes[7].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[6]){
             println("aaa")
             rango = arrayOf(6, 7, 8)
         }
-        else if (i >= 2 && checkBoxes[3].isChecked && checkBoxes[4].isChecked           // evitar 2da linea horizontal
-            || checkBoxes[3].isChecked && checkBoxes[5].isChecked && i >= 2
-            || checkBoxes[4].isChecked && checkBoxes[5].isChecked && i >= 2){
+        else if (i >= 2 && checkBoxes[3].isChecked && checkBoxes[4].isChecked && !marcadasBot[5]          // evitar 2da linea horizontal
+            || checkBoxes[3].isChecked && checkBoxes[5].isChecked && i >= 2 && !marcadasBot[4]
+            || checkBoxes[4].isChecked && checkBoxes[5].isChecked && i >= 2 && !marcadasBot[3]){
             rango = arrayOf(3, 4, 5)
         }
-        else if (i >= 2 && checkBoxes[0].isChecked && checkBoxes[1].isChecked           // evitar 1ra linea horizontal
-            || checkBoxes[0].isChecked && checkBoxes[2].isChecked && i >= 2
-            || checkBoxes[1].isChecked && checkBoxes[2].isChecked && i >= 2) {
+        else if (i >= 2 && checkBoxes[0].isChecked && checkBoxes[1].isChecked && !marcadasBot[2]          // evitar 1ra linea horizontal
+            || checkBoxes[0].isChecked && checkBoxes[2].isChecked && i >= 2 && !marcadasBot[1]
+            || checkBoxes[1].isChecked && checkBoxes[2].isChecked && i >= 2 && !marcadasBot[0]) {
             rango = arrayOf(0, 1, 2)
-        }else if (i > 2 && checkBoxes[0].isChecked && checkBoxes[8].isChecked){         // evitar 3ra linea horizontal
-            rango = arrayOf(1,3,5,7)
-        }else if (i >= 2 && checkBoxes[4].isChecked && checkBoxes[8].isChecked          // evitar diagonal 1
-            || checkBoxes[4].isChecked && checkBoxes[0].isChecked && i >= 2
-            || checkBoxes[0].isChecked && checkBoxes[8].isChecked && i >= 2) {
+        }else if (i >= 2 && checkBoxes[4].isChecked && checkBoxes[8].isChecked && !marcadasBot[0]         // evitar diagonal 1
+            || checkBoxes[4].isChecked && checkBoxes[0].isChecked && i >= 2 && !marcadasBot[8]
+            || checkBoxes[0].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[4]) {
             rango = arrayOf(0, 4, 8)
-        }else if (i >= 2 && checkBoxes[2].isChecked && checkBoxes[4].isChecked          // evitar diagonal 2
-            || checkBoxes[2].isChecked && checkBoxes[6].isChecked && i >= 2
-            || checkBoxes[4].isChecked && checkBoxes[6].isChecked && i >= 2){
+        }else if (i >= 2 && checkBoxes[2].isChecked && checkBoxes[4].isChecked && !marcadasBot[6]         // evitar diagonal 2
+            || checkBoxes[2].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[4]
+            || checkBoxes[4].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[2]){
             rango = arrayOf(2, 4, 6)
         }
         return rango

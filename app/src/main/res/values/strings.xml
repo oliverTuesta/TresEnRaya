@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">tresEnRaya</string>
     <string name="tres_en_raya">Tres en Raya</string>
+    <string name="volver_jugar">Volver a jugar</string>
+    <string name="tu">TU</string>
+    <string name="bot">BOT</string>
+    <string name="_0">0</string>
     <string name="reiniciar">REINICIAR</string>
 </resources>

@@ -1,14 +1,14 @@
 package com.example.tresenraya
 
 import android.view.View
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 
-class Bot (val btnReiniciar: Button){
+class Bot (val txtVictoriasBot: TextView){
 
     var mensaje = ""
     var marcadasBot = arrayOf<Boolean>(false, false, false, false, false, false, false, false, false)
+    var victoriasBot: Int = 0
 
     fun marcarBot(checkBoxes: ArrayList<CheckBox>, txtResult: TextView) {
 
@@ -25,7 +25,7 @@ class Bot (val btnReiniciar: Button){
             }
         }
         if (contadorCasillasMarcadas >= 5 || contadorBot >= 5) {
-            empate(txtResult)
+            empate(txtResult, checkBoxes)
         }
 
         if (contadorBot < 5) {
@@ -34,11 +34,12 @@ class Bot (val btnReiniciar: Button){
             marcadasBot[jugada] = true
             checkBoxes[jugada].visibility = View.INVISIBLE
         } else {
-            empate(txtResult)
+            empate(txtResult, checkBoxes)
         }
 
         if (isBotWin()) {
-            lose(txtResult)
+            victoriasBot++
+            lose(txtResult, checkBoxes)
         }
     }
 
@@ -164,15 +165,11 @@ class Bot (val btnReiniciar: Button){
         }
         var rango = arrayOf(0,1,2,3,4,5,6,7,8)
         if (i == 2 && checkBoxes[0].isChecked && checkBoxes[8].isChecked
-            || i == 2 && checkBoxes[2].isChecked && checkBoxes[6].isChecked){
+            || i == 2 && checkBoxes[2].isChecked && checkBoxes[6].isChecked){          // si marca en dso esquinas opuestas
             rango = arrayOf(1,3,5,7)
-        }else if (checkBoxes[0].isChecked && i==1 || checkBoxes[2].isChecked && i==1 // si empieza en una esquina
-            || checkBoxes[6].isChecked && i==1|| checkBoxes[8].isChecked&& i==1){
+        }else if (i==1 && !checkBoxes[4].isChecked){
             rango = arrayOf(4)
-        }else if (checkBoxes[1].isChecked && i==1 || checkBoxes[3].isChecked && i==1 //si no empieza en una esquina
-            || checkBoxes[5].isChecked && i==1 || checkBoxes[7].isChecked&& i==1){
-            rango= arrayOf(4)
-        }else if (checkBoxes[4].isChecked && i < 2){                                   //si empieza en el centro
+        }else if (checkBoxes[4].isChecked && i == 1){                                   //si empieza en el centro
             rango = arrayOf(0, 2, 6, 8)
         }else if (i >= 2 && checkBoxes[2].isChecked && checkBoxes[5].isChecked && !marcadasBot[8]         // evitar 3ra linea vertical
             || checkBoxes[2].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[8]
@@ -209,20 +206,30 @@ class Bot (val btnReiniciar: Button){
             || checkBoxes[2].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[4]
             || checkBoxes[4].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[2]){
             rango = arrayOf(2, 4, 6)
+        }else if (i == 2 && checkBoxes[0].isChecked && checkBoxes[4].isChecked && !marcadasBot[8]
+            || checkBoxes[8].isChecked && checkBoxes[4].isChecked && i == 2 && !marcadasBot[0]
+            || checkBoxes[2].isChecked && checkBoxes[4].isChecked && i == 2 && !marcadasBot[6]
+            || checkBoxes[4].isChecked && checkBoxes[6].isChecked && i == 2 && !marcadasBot[2]){
+            rango = arrayOf(0,2,6,8)
         }
         return rango
     }
 
-    fun lose(txtResult: TextView) {
+    fun lose(txtResult: TextView, checkBoxes: ArrayList<CheckBox>) {
+        txtVictoriasBot.text = ""+victoriasBot
         mensaje = "perdiste"
         txtResult.text = mensaje
-        btnReiniciar.visibility = View.VISIBLE
+        for (checkBox: CheckBox in checkBoxes){
+            checkBox.isClickable = false
+        }
     }
 
-    fun empate(txtResult: TextView) {
+    fun empate(txtResult: TextView, checkBoxes: ArrayList<CheckBox>) {
         mensaje = "empate"
         txtResult.text = mensaje
-        btnReiniciar.visibility = View.VISIBLE
+        for (checkBox: CheckBox in checkBoxes){
+            checkBox.isClickable = false
+        }
     }
 
 }

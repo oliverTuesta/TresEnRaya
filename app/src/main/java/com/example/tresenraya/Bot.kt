@@ -136,9 +136,6 @@ class Bot (val btnReiniciar: Button){
         }else {
             rango = defender(checkBoxes)
         }
-        for (i: Int in rango) {
-            println(i)
-        }
         do {
             numRandom = rango.random()
             z++
@@ -148,7 +145,6 @@ class Bot (val btnReiniciar: Button){
             }
         } while (checkBoxes[numRandom].isChecked || marcadasBot[numRandom])
         jugada = numRandom
-        println("juagada: "+jugada)
         return jugada
     }
 

@@ -10,7 +10,7 @@ class Bot (val txtVictoriasBot: TextView){
     var marcadasBot = arrayOf<Boolean>(false, false, false, false, false, false, false, false, false)
     var victoriasBot: Int = 0
 
-    fun marcarBot(checkBoxes: ArrayList<CheckBox>, txtResult: TextView) {
+    fun marcarBot(checkBoxes: ArrayList<CheckBox>, txtResult: TextView, modoExperto: Boolean) {
 
         var contadorCasillasMarcadas = 0
         for (i in 0..8) {
@@ -29,7 +29,7 @@ class Bot (val txtVictoriasBot: TextView){
         }
 
         if (contadorBot < 5) {
-            val jugada: Int = nextBotGame(checkBoxes)
+            val jugada: Int = nextBotGame(checkBoxes, modoExperto)
 
             marcadasBot[jugada] = true
             checkBoxes[jugada].visibility = View.INVISIBLE
@@ -82,7 +82,7 @@ class Bot (val txtVictoriasBot: TextView){
         return false
     }
 
-    fun nextBotGame(checkBoxes: ArrayList<CheckBox>): Int {
+    fun nextBotGame(checkBoxes: ArrayList<CheckBox>, modoExperto: Boolean): Int {
         var numRandom: Int = 0
         var jugada = 0
         var rango = arrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8)
@@ -99,9 +99,10 @@ class Bot (val txtVictoriasBot: TextView){
          */
         if (atacar(checkBoxes).size != 1) {
             rango = atacar(checkBoxes)
-            println("ataque")
-        }else {
+        }else if (modoExperto){
             rango = defender(checkBoxes)
+        }else{
+            rango = arrayOf(0,1,2,3,4,5,6,7,8)
         }
         do {
             numRandom = rango.random()
@@ -127,7 +128,7 @@ class Bot (val txtVictoriasBot: TextView){
         } else if (marcadasBot[2] && marcadasBot[5] && !checkBoxes[8].isChecked
             || marcadasBot[2] && marcadasBot[8] && !checkBoxes[5].isChecked
             || marcadasBot[5] && marcadasBot[8] && !checkBoxes[2].isChecked) {
-            rango = arrayOf(6, 7, 8)
+            rango = arrayOf(2, 5, 8)
         } else if (marcadasBot[1] && marcadasBot[4] && !checkBoxes[7].isChecked
             || marcadasBot[1] && marcadasBot[7] && !checkBoxes[4].isChecked
             || marcadasBot[4] && marcadasBot[7] && !checkBoxes[1].isChecked

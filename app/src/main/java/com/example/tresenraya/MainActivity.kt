@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
@@ -30,11 +31,12 @@ class MainActivity : AppCompatActivity() {
         val btnReiniciar: Button = findViewById(R.id.btnReiniciar)
         val txtVictorias: TextView = findViewById(R.id.txtVictorias)
         val txtVictoriasBot: TextView = findViewById(R.id.txtVictoriasBot)
+        val modoExperto: Switch = findViewById(R.id.switch2)
         val checkboxes = arrayListOf(
             checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6
-            , checkBox7, checkBox8, checkBox9
-        )
+            , checkBox7, checkBox8, checkBox9)
         val bot:Bot = Bot(txtVictoriasBot)
+        modoExperto.setOnClickListener { reiniciar(checkboxes, txtVictorias, txtVictoriasBot, bot) }
         btnReiniciar.setOnClickListener { reiniciar(checkboxes, txtVictorias, txtVictoriasBot, bot) }
         btnNewGame.setOnClickListener { newGame(checkboxes, txtResult, bot) }
         checkBox1.setOnClickListener {
@@ -44,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 victoria(txtResult, txtVictorias, checkboxes)
             } else {
-                bot.marcarBot(checkboxes, txtResult)
+                bot.marcarBot(checkboxes, txtResult, modoExperto.isChecked)
             }
             checkBox1.isClickable = false
         }
@@ -54,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 victoria(txtResult, txtVictorias, checkboxes)
             } else {
-                bot.marcarBot(checkboxes, txtResult)
+                bot.marcarBot(checkboxes, txtResult, modoExperto.isChecked)
             }
             checkBox2.isClickable = false
         }
@@ -65,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 victoria(txtResult, txtVictorias, checkboxes)
             } else {
-                bot.marcarBot(checkboxes, txtResult)
+                bot.marcarBot(checkboxes, txtResult, modoExperto.isChecked)
             }
             checkBox3.isClickable = false
         }
@@ -75,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 victoria(txtResult, txtVictorias, checkboxes)
             } else {
-                bot.marcarBot(checkboxes, txtResult)
+                bot.marcarBot(checkboxes, txtResult, modoExperto.isChecked)
             }
             checkBox4.isClickable = false
         }
@@ -86,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 victoria(txtResult, txtVictorias, checkboxes)
             } else {
-                bot.marcarBot(checkboxes, txtResult)
+                bot.marcarBot(checkboxes, txtResult, modoExperto.isChecked)
             }
             checkBox5.isClickable = false
         }
@@ -96,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 victoria(txtResult, txtVictorias, checkboxes)
             } else {
-                bot.marcarBot(checkboxes, txtResult)
+                bot.marcarBot(checkboxes, txtResult, modoExperto.isChecked)
             }
             checkBox6.isClickable = false
         }
@@ -107,7 +109,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 victoria(txtResult, txtVictorias, checkboxes)
             } else {
-                bot.marcarBot(checkboxes, txtResult)
+                bot.marcarBot(checkboxes, txtResult, modoExperto.isChecked)
             }
             checkBox7.isClickable = false
         }
@@ -117,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 victoria(txtResult, txtVictorias, checkboxes)
             } else {
-                bot.marcarBot(checkboxes, txtResult)
+                bot.marcarBot(checkboxes, txtResult, modoExperto.isChecked)
             }
             checkBox8.isClickable = false
         }
@@ -128,7 +130,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 victoria(txtResult, txtVictorias, checkboxes)
             } else {
-                bot.marcarBot(checkboxes, txtResult)
+                bot.marcarBot(checkboxes, txtResult, modoExperto.isChecked)
             }
             checkBox9.isClickable = false
         }

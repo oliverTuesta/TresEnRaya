@@ -1,7 +1,6 @@
 package com.example.tresenraya
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Switch
@@ -36,8 +35,8 @@ class MainActivity : AppCompatActivity() {
             checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6
             , checkBox7, checkBox8, checkBox9)
         val bot:Bot = Bot(txtVictoriasBot)
-        modoExperto.setOnClickListener { reiniciar(checkboxes, txtVictorias, txtVictoriasBot, bot) }
-        btnReiniciar.setOnClickListener { reiniciar(checkboxes, txtVictorias, txtVictoriasBot, bot) }
+        modoExperto.setOnClickListener { reiniciar(checkboxes, txtVictorias, txtVictoriasBot, bot, txtResult) }
+        btnReiniciar.setOnClickListener { reiniciar(checkboxes, txtVictorias, txtVictoriasBot, bot, txtResult) }
         btnNewGame.setOnClickListener { newGame(checkboxes, txtResult, bot) }
         checkBox1.setOnClickListener {
             if (checkBox2.isChecked && checkBox3.isChecked
@@ -151,26 +150,18 @@ class MainActivity : AppCompatActivity() {
             txtResult.text = ""
             bot.marcadasBot =  arrayOf<Boolean>(false, false, false, false, false, false, false, false, false)
             for (x in 0..8) {
-                checkBoxes[x].visibility = View.VISIBLE
+                checkBoxes[x].isEnabled = true
                 checkBoxes[x].isChecked = false
             }
             for (checkBox: CheckBox in checkBoxes){
                 checkBox.isClickable = true
             }
         }
-    fun reiniciar(checkBoxes: ArrayList<CheckBox>, txtVictorias: TextView, txtVictoriasBot: TextView, bot: Bot) {
-        bot.marcadasBot =  arrayOf<Boolean>(false, false, false, false, false, false, false, false, false)
+    fun reiniciar(checkBoxes: ArrayList<CheckBox>, txtVictorias: TextView, txtVictoriasBot: TextView, bot: Bot, txtResult: TextView) {
         victorias = 0
         bot.victoriasBot = 0
         txtVictorias.text = ""+victorias
         txtVictoriasBot.text = ""+bot.victoriasBot
-        for (x in 0..8) {
-            checkBoxes[x].visibility = View.VISIBLE
-            checkBoxes[x].isChecked = false
-        }
-        for (checkBox: CheckBox in checkBoxes){
-            checkBox.isClickable = true
-        }
+        newGame(checkBoxes, txtResult, bot)
     }
-
     }

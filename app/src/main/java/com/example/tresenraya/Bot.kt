@@ -1,6 +1,5 @@
 package com.example.tresenraya
 
-import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 
@@ -30,9 +29,8 @@ class Bot (val txtVictoriasBot: TextView){
 
         if (contadorBot < 5) {
             val jugada: Int = nextBotGame(checkBoxes, modoExperto)
-
             marcadasBot[jugada] = true
-            checkBoxes[jugada].visibility = View.INVISIBLE
+            checkBoxes[jugada].isEnabled = false
         } else {
             empate(txtResult, checkBoxes)
         }
@@ -120,7 +118,7 @@ class Bot (val txtVictoriasBot: TextView){
         if (marcadasBot[2] && marcadasBot[4] && !checkBoxes[6].isChecked
             || marcadasBot[2] && marcadasBot[6] && !checkBoxes[4].isChecked
             || marcadasBot[4] && marcadasBot[6] && !checkBoxes[2].isChecked) {
-            rango = arrayOf(6, 7, 8)
+            rango = arrayOf(2, 4, 6)
         } else if (marcadasBot[0] && marcadasBot[4] && !checkBoxes[8].isChecked
             || marcadasBot[0] && marcadasBot[8] && !checkBoxes[4].isChecked
             || marcadasBot[4] && marcadasBot[8] && !checkBoxes[0].isChecked) {
@@ -131,23 +129,19 @@ class Bot (val txtVictoriasBot: TextView){
             rango = arrayOf(2, 5, 8)
         } else if (marcadasBot[1] && marcadasBot[4] && !checkBoxes[7].isChecked
             || marcadasBot[1] && marcadasBot[7] && !checkBoxes[4].isChecked
-            || marcadasBot[4] && marcadasBot[7] && !checkBoxes[1].isChecked
-        ) {
+            || marcadasBot[4] && marcadasBot[7] && !checkBoxes[1].isChecked) {
             rango = arrayOf(1, 4, 7)
         } else if (marcadasBot[0] && marcadasBot[3] && !checkBoxes[6].isChecked
             || marcadasBot[0] && marcadasBot[6] && !checkBoxes[3].isChecked
-            || marcadasBot[3] && marcadasBot[6] && !checkBoxes[0].isChecked
-        ) {
+            || marcadasBot[3] && marcadasBot[6] && !checkBoxes[0].isChecked) {
             rango = arrayOf(0, 3, 6)
         } else if (marcadasBot[6] && marcadasBot[7] && !checkBoxes[8].isChecked
             || marcadasBot[6] && marcadasBot[8] && !checkBoxes[7].isChecked
-            || marcadasBot[7] && marcadasBot[8] && !checkBoxes[6].isChecked
-        ) {
+            || marcadasBot[7] && marcadasBot[8] && !checkBoxes[6].isChecked) {
             rango = arrayOf(6, 7, 8)
         } else if (marcadasBot[3] && marcadasBot[4] && !checkBoxes[5].isChecked
             || marcadasBot[3] && marcadasBot[5] && !checkBoxes[4].isChecked
-            || marcadasBot[4] && marcadasBot[5] && !checkBoxes[3].isChecked
-        ) {
+            || marcadasBot[4] && marcadasBot[5] && !checkBoxes[3].isChecked) {
             rango = arrayOf(3, 4, 5)
         } else if (marcadasBot[0] && marcadasBot[1] && !checkBoxes[2].isChecked
             || marcadasBot[0] && marcadasBot[2] && !checkBoxes[1].isChecked
@@ -187,7 +181,6 @@ class Bot (val txtVictoriasBot: TextView){
         }else if (i >= 2 && checkBoxes[6].isChecked && checkBoxes[7].isChecked && !marcadasBot[8]         // evitar 3ra linea horizontal
             || checkBoxes[6].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[7]
             || checkBoxes[7].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[6]){
-            println("aaa")
             rango = arrayOf(6, 7, 8)
         }
         else if (i >= 2 && checkBoxes[3].isChecked && checkBoxes[4].isChecked && !marcadasBot[5]          // evitar 2da linea horizontal

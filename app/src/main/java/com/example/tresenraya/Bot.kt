@@ -96,8 +96,10 @@ class Bot (val txtVictoriasBot: TextView){
          * atque
          */
         if (atacar(checkBoxes).size != 1) {
+            println("atacar")
             rango = atacar(checkBoxes)
         }else if (modoExperto){
+            println("defender")
             rango = defender(checkBoxes)
         }else{
             rango = arrayOf(0,1,2,3,4,5,6,7,8)
@@ -159,7 +161,13 @@ class Bot (val txtVictoriasBot: TextView){
             }
         }
         var rango = arrayOf(0,1,2,3,4,5,6,7,8)
-        if (i == 2 && checkBoxes[0].isChecked && checkBoxes[8].isChecked
+        if (i == 2 && checkBoxes[7].isChecked && checkBoxes[3].isChecked
+            || i == 2 && checkBoxes[7].isChecked && checkBoxes[5].isChecked){
+            rango = arrayOf(6,8)
+        }else if (i == 2 && checkBoxes[1].isChecked && checkBoxes[3].isChecked
+            || i == 2 && checkBoxes[1].isChecked && checkBoxes[5].isChecked){
+            rango = arrayOf(0,2)
+        }else if (i == 2 && checkBoxes[0].isChecked && checkBoxes[8].isChecked
             || i == 2 && checkBoxes[2].isChecked && checkBoxes[6].isChecked){          // si marca en dso esquinas opuestas
             rango = arrayOf(1,3,5,7)
         }else if (i==1 && !checkBoxes[4].isChecked){
@@ -167,11 +175,11 @@ class Bot (val txtVictoriasBot: TextView){
         }else if (checkBoxes[4].isChecked && i == 1){                                   //si empieza en el centro
             rango = arrayOf(0, 2, 6, 8)
         }else if (i >= 2 && checkBoxes[2].isChecked && checkBoxes[5].isChecked && !marcadasBot[8]         // evitar 3ra linea vertical
-            || checkBoxes[2].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[8]
-            || checkBoxes[5].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[8]){
+            || checkBoxes[2].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[5]
+            || checkBoxes[5].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[2]){
             rango = arrayOf(2, 5, 8)
         }else if (i >= 2 && checkBoxes[1].isChecked && checkBoxes[4].isChecked && !marcadasBot[7]         // evitar 2da linea vertical
-            || checkBoxes[1].isChecked && checkBoxes[7].isChecked && i >= 2 && !marcadasBot[7]
+            || checkBoxes[1].isChecked && checkBoxes[7].isChecked && i >= 2 && !marcadasBot[4]
             || checkBoxes[4].isChecked && checkBoxes[7].isChecked && i >= 2 && !marcadasBot[1]){
             rango = arrayOf(1, 4, 7)
         }else if (i >= 2 && checkBoxes[0].isChecked && checkBoxes[3].isChecked  && !marcadasBot[6]        // evitar 1ra linea vertical

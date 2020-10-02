@@ -1,36 +1,27 @@
 package com.example.tresenraya
 
+import android.graphics.Point
 import android.widget.CheckBox
 import android.widget.TextView
 
 class Bot (val txtVictoriasBot: TextView){
 
     var mensaje = ""
-    var marcadasBot = arrayOf<Boolean>(false, false, false, false, false, false, false, false, false)
+    var marcadasBot = arrayOf(arrayOf(false, false, false), arrayOf(false, false, false), arrayOf(false, false, false))
     var victoriasBot: Int = 0
 
-    fun marcarBot(checkBoxes: ArrayList<CheckBox>, txtResult: TextView, modoExperto: Boolean) {
-
-        var contadorCasillasMarcadas = 0
-        for (i in 0..8) {
-            if (checkBoxes[i].isChecked) {
-                contadorCasillasMarcadas++
-            }
+    fun marcarBot(checkBoxes: Array<Array<CheckBox>>, txtResult: TextView, modoExperto: Boolean) {
+        var contadorBot = 0
+        for (y in 0..2) {
+            for (x in 0..2)
+                if (marcadasBot[y][x]) {
+                    contadorBot++
+                }
         }
-        var contadorBot = 1
-        for (i: Boolean in marcadasBot) {
-            if (i) {
-                contadorBot++
-            }
-        }
-        if (contadorCasillasMarcadas >= 5 || contadorBot >= 5) {
-            empate(txtResult, checkBoxes)
-        }
-
-        if (contadorBot < 5) {
-            val jugada: Int = nextBotGame(checkBoxes, modoExperto)
-            marcadasBot[jugada] = true
-            checkBoxes[jugada].isEnabled = false
+        if (contadorBot < 4) {
+            val jugada: Point = nextBotGame(checkBoxes, modoExperto)
+            marcadasBot[jugada.y][jugada.x] = true
+            checkBoxes[jugada.y][jugada.x].isEnabled = false
         } else {
             empate(txtResult, checkBoxes)
         }
@@ -42,126 +33,197 @@ class Bot (val txtVictoriasBot: TextView){
     }
 
     fun isBotWin(): Boolean {
-        /**
-         * horizontal
-         */
-        for (x in 0..6 step 3) {
-            var contador = 0
-            for (i in 0..2) {
-                if (marcadasBot[x + i]) {
-                    contador++
-                    if (contador == 3) {
+        var contadorD1 = 0
+        var contadorD2 = 0
+        var D2x = 2
+        for (i in 0..2) {
+            var contadorV = 0
+            var contadorH = 0
+            //diagonal 1
+            if (marcadasBot[i][i]) {
+                contadorD1++
+                if (contadorD1 == 3) {
+                    return true
+                }
+            }
+            //diagonal 2
+            if (marcadasBot[i][D2x]) {
+                contadorD2++
+                if (contadorD2 == 3) {
+                    return true
+                }
+            }
+            D2x--
+            //horizontal
+            for (x in 0..2){
+                if (marcadasBot[i][x]) {
+                    contadorH++
+                    if (contadorH == 3) {
                         return true
                     }
                 }
             }
-        }
-        /**
-         * vertical
-         */
-        for (x in 0..2) {
-            var contadorVertical = 0
-            for (i in 0..6 step 3) {
-                if (marcadasBot[x + i]) {
-                    contadorVertical++
-                    if (contadorVertical == 3) {
+            //vertical
+            for (y in 0..2) {
+                if (marcadasBot[y][i]) {
+                    contadorV++
+                    if (contadorV == 3) {
                         return true
                     }
                 }
             }
-        }
-        /**
-         * diagonaes
-         */
-        if(marcadasBot[2] && marcadasBot[4] && marcadasBot[6]
-            || marcadasBot[0] && marcadasBot[4] && marcadasBot[8]) {
-            return true
         }
         return false
     }
-
-    fun nextBotGame(checkBoxes: ArrayList<CheckBox>, modoExperto: Boolean): Int {
-        var numRandom: Int = 0
-        var jugada = 0
-        var rango = arrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8)
-        var z = 0
-
-        var i = 0
-        for (x in 0..8) {
-            if (checkBoxes[x].isChecked) {
-                i++
-            }
+    fun nextBotGame(checkBoxes: Array<Array<CheckBox>>, modoExperto: Boolean): Point {
+        var jugada: Point
+        var contadorMarcadas = 0
+        for (y in 0..2) {
+            for (x in 0..2)
+                if (checkBoxes[y][x].isChecked) {
+                    contadorMarcadas++
+                }
         }
-        /**
-         * atque
-         */
-        if (atacar(checkBoxes).size != 1) {
-            println("atacar")
-            rango = atacar(checkBoxes)
-        }else if (modoExperto){
-            println("defender")
+        var rango = atacar(checkBoxes)
+        if (rango == arrayListOf<Point>() && modoExperto){
             rango = defender(checkBoxes)
-        }else{
-            rango = arrayOf(0,1,2,3,4,5,6,7,8)
+            //rango = defender(checkBoxes)
         }
+        var z = 0
         do {
-            numRandom = rango.random()
-            z++
-            if (z > 15) {
-                numRandom = (0..8).random()
-                continue
+            if (z >= 8 || rango.equals(arrayListOf<Point>())){
+                rango = arrayListOf()
+                for (y in 0..2){
+                    for (x in 0..2){
+                        rango.add(Point(x,y))
+                    }
+                }
             }
-        } while (checkBoxes[numRandom].isChecked || marcadasBot[numRandom])
-        jugada = numRandom
+            jugada = rango.random()
+            z++
+        } while (checkBoxes[jugada.y][jugada.x].isChecked || marcadasBot[jugada.y][jugada.x])
+
         return jugada
     }
-    fun atacar(checkBoxes: ArrayList<CheckBox>): Array<Int>{
-        var rango = arrayOf(0)
-        if (marcadasBot[2] && marcadasBot[4] && !checkBoxes[6].isChecked
-            || marcadasBot[2] && marcadasBot[6] && !checkBoxes[4].isChecked
-            || marcadasBot[4] && marcadasBot[6] && !checkBoxes[2].isChecked) {
-            rango = arrayOf(2, 4, 6)
-        } else if (marcadasBot[0] && marcadasBot[4] && !checkBoxes[8].isChecked
-            || marcadasBot[0] && marcadasBot[8] && !checkBoxes[4].isChecked
-            || marcadasBot[4] && marcadasBot[8] && !checkBoxes[0].isChecked) {
-            rango = arrayOf(0, 4, 8)
-        } else if (marcadasBot[2] && marcadasBot[5] && !checkBoxes[8].isChecked
-            || marcadasBot[2] && marcadasBot[8] && !checkBoxes[5].isChecked
-            || marcadasBot[5] && marcadasBot[8] && !checkBoxes[2].isChecked) {
-            rango = arrayOf(2, 5, 8)
-        } else if (marcadasBot[1] && marcadasBot[4] && !checkBoxes[7].isChecked
-            || marcadasBot[1] && marcadasBot[7] && !checkBoxes[4].isChecked
-            || marcadasBot[4] && marcadasBot[7] && !checkBoxes[1].isChecked) {
-            rango = arrayOf(1, 4, 7)
-        } else if (marcadasBot[0] && marcadasBot[3] && !checkBoxes[6].isChecked
-            || marcadasBot[0] && marcadasBot[6] && !checkBoxes[3].isChecked
-            || marcadasBot[3] && marcadasBot[6] && !checkBoxes[0].isChecked) {
-            rango = arrayOf(0, 3, 6)
-        } else if (marcadasBot[6] && marcadasBot[7] && !checkBoxes[8].isChecked
-            || marcadasBot[6] && marcadasBot[8] && !checkBoxes[7].isChecked
-            || marcadasBot[7] && marcadasBot[8] && !checkBoxes[6].isChecked) {
-            rango = arrayOf(6, 7, 8)
-        } else if (marcadasBot[3] && marcadasBot[4] && !checkBoxes[5].isChecked
-            || marcadasBot[3] && marcadasBot[5] && !checkBoxes[4].isChecked
-            || marcadasBot[4] && marcadasBot[5] && !checkBoxes[3].isChecked) {
-            rango = arrayOf(3, 4, 5)
-        } else if (marcadasBot[0] && marcadasBot[1] && !checkBoxes[2].isChecked
-            || marcadasBot[0] && marcadasBot[2] && !checkBoxes[1].isChecked
-            || marcadasBot[1] && marcadasBot[2] && !checkBoxes[0].isChecked) {
-            rango = arrayOf(0, 1, 2)
+
+    fun atacar(checkBoxes: Array<Array<CheckBox>>): ArrayList<Point>{
+        var rango = arrayListOf<Point>()
+        //horizontal
+        if (marcadasBot[0][0] && marcadasBot[0][1] && !checkBoxes[0][2].isChecked ||
+            marcadasBot[0][0] && marcadasBot[0][2] && !checkBoxes[0][1].isChecked ||
+            marcadasBot[0][1] && marcadasBot[0][2] && !checkBoxes[0][0].isChecked){
+            rango = arrayListOf(Point(0,0), Point(1,0), Point(2, 0))
+        }else if (marcadasBot[1][0] && marcadasBot[1][1] && !checkBoxes[1][2].isChecked ||
+            marcadasBot[1][0] && marcadasBot[1][2] && !checkBoxes[1][1].isChecked ||
+            marcadasBot[1][1] && marcadasBot[1][2] && !checkBoxes[1][0].isChecked){
+            rango = arrayListOf(Point(0,1), Point(1,1), Point(2, 1))
+        }else if (marcadasBot[2][0] && marcadasBot[2][1] && !checkBoxes[2][2].isChecked ||
+            marcadasBot[2][0] && marcadasBot[2][2] && !checkBoxes[2][1].isChecked ||
+            marcadasBot[2][1] && marcadasBot[2][2] && !checkBoxes[2][0].isChecked){
+            rango = arrayListOf(Point(0,2), Point(1,2), Point(2, 2))
+        }
+        //vertical
+        else if (marcadasBot[0][0] && marcadasBot[1][0] && !checkBoxes[2][0].isChecked ||
+            marcadasBot[0][0] && marcadasBot[2][0] && !checkBoxes[1][0].isChecked ||
+            marcadasBot[1][0] && marcadasBot[2][0] && !checkBoxes[0][0].isChecked){
+            rango = arrayListOf(Point(0,0), Point(0,1), Point(0, 2))
+        }else if (marcadasBot[0][1] && marcadasBot[1][1] && !checkBoxes[2][1].isChecked ||
+            marcadasBot[0][1] && marcadasBot[2][1] && !checkBoxes[1][1].isChecked ||
+            marcadasBot[1][1] && marcadasBot[2][1] && !checkBoxes[0][1].isChecked){
+            rango = arrayListOf(Point(1,0), Point(1,1), Point(1, 2))
+        }else if (marcadasBot[0][2] && marcadasBot[1][2] && !checkBoxes[2][2].isChecked ||
+            marcadasBot[0][2] && marcadasBot[2][2] && !checkBoxes[1][2].isChecked ||
+            marcadasBot[1][2] && marcadasBot[2][2] && !checkBoxes[0][2].isChecked){
+            rango = arrayListOf(Point(2,0), Point(2,1), Point(2, 2))
+        }
+        //diagonal 1
+        else if (marcadasBot[0][0] && marcadasBot[1][1] && !checkBoxes[2][2].isChecked ||
+            marcadasBot[0][0] && marcadasBot[2][2] && !checkBoxes[1][1].isChecked ||
+            marcadasBot[1][1] && marcadasBot[2][2] && !checkBoxes[0][0].isChecked){
+            rango = arrayListOf(Point(0,0), Point(1,1), Point(2, 2))
+        }else if (marcadasBot[0][2] && marcadasBot[1][1] && !checkBoxes[2][0].isChecked ||
+            marcadasBot[0][2] && marcadasBot[2][0] && !checkBoxes[1][1].isChecked ||
+            marcadasBot[1][1] && marcadasBot[2][0] && !checkBoxes[0][2].isChecked){
+            rango = arrayListOf(Point(2,0), Point(1,1), Point(0, 2))
         }
         return rango
     }
-
-    fun defender(checkBoxes: ArrayList<CheckBox>): Array<Int>{
+    fun defender(checkBoxes: Array<Array<CheckBox>>): ArrayList<Point>{
+        var rango = arrayListOf<Point>()
         var i = 0
-        for (x in 0..8) {
-            if (checkBoxes[x].isChecked) {
-                i++
+        for (y in 0..2) {
+            for (x in 0..2){
+                if (checkBoxes[y][x].isChecked){
+                    i++
+                }
             }
         }
-        var rango = arrayOf(0,1,2,3,4,5,6,7,8)
-        if (i == 2 && checkBoxes[7].isChecked && checkBoxes[3].isChecked
+        if (i == 1 && !checkBoxes[1][1].isChecked){                     //empieza en centro
+            rango = arrayListOf(Point(1,1))
+        }
+        else if (i == 1 && checkBoxes[1][1].isChecked) {                //no empieza en centro
+            for (y in 0..2 step 2){
+                for (x in 0..2 step 2){
+                    rango.add(Point(x,y))
+                }
+            }
+        }else if (i == 2 && checkBoxes[0][0].isChecked && checkBoxes[2][2].isChecked && marcadasBot[1][1] ||        // si marca en diagonal
+            i == 2 && checkBoxes[0][2].isChecked && checkBoxes[2][0].isChecked && marcadasBot[1][1]){
+            rango = arrayListOf(Point(1,0), Point(0,1), Point(2,1), Point(2,1))
+        }
+
+        else if (i >= 2 && checkBoxes[0][0].isChecked && checkBoxes[0][1].isChecked && !marcadasBot[0][2] ||
+             i >= 2 && checkBoxes[0][0].isChecked && checkBoxes[0][2].isChecked && !marcadasBot[0][1] ||          // evitar 0 linea horizonta
+             i >= 2 && checkBoxes[0][1].isChecked && checkBoxes[0][2].isChecked && !marcadasBot[0][0]) {
+                for (x in 0..2){
+                    rango.add(Point(x,0))
+                }
+        }else if (i >= 2 && checkBoxes[1][0].isChecked && checkBoxes[1][1].isChecked && !marcadasBot[1][2] ||
+            i >= 2 && checkBoxes[1][0].isChecked && checkBoxes[1][2].isChecked && !marcadasBot[1][1] ||          // evitar 1 linea horizonta
+            i >= 2 && checkBoxes[1][1].isChecked && checkBoxes[1][2].isChecked && !marcadasBot[1][0]) {
+            for (x in 0..2){
+                rango.add(Point(x,1))
+            }
+        }else if (i >= 2 && checkBoxes[2][0].isChecked && checkBoxes[2][1].isChecked && !marcadasBot[2][2] ||
+            i >= 2 && checkBoxes[2][0].isChecked && checkBoxes[2][2].isChecked && !marcadasBot[2][1] ||          // evitar 2 linea horizonta
+            i >= 2 && checkBoxes[2][1].isChecked && checkBoxes[2][2].isChecked && !marcadasBot[2][0]) {
+            for (x in 0..2){
+                rango.add(Point(x,2))
+            }
+        }else if (i >= 2 && checkBoxes[0][0].isChecked && checkBoxes[1][0].isChecked && !marcadasBot[2][0] ||        // evitar 0 linea vertical
+             i >= 2 && checkBoxes[0][0].isChecked && checkBoxes[2][0].isChecked && !marcadasBot[1][0] ||
+             i >= 2 && checkBoxes[1][0].isChecked && checkBoxes[2][0].isChecked && !marcadasBot[0][0]){
+            for (y in 0..2){
+                rango.add(Point(0,y))
+            }
+        }else if (i >= 2 && checkBoxes[0][1].isChecked && checkBoxes[1][1].isChecked && !marcadasBot[2][1] ||        // evitar 1 linea vertical
+            i >= 2 && checkBoxes[0][1].isChecked && checkBoxes[2][1].isChecked && !marcadasBot[1][1] ||
+            i >= 2 && checkBoxes[1][1].isChecked && checkBoxes[2][1].isChecked && !marcadasBot[0][1]){
+            for (y in 0..2){
+                rango.add(Point(1,y))
+            }
+        }else if (i >= 2 && checkBoxes[0][2].isChecked && checkBoxes[1][2].isChecked && !marcadasBot[2][2] ||        // evitar 2 linea vertical
+            i >= 2 && checkBoxes[0][2].isChecked && checkBoxes[2][2].isChecked && !marcadasBot[1][2] ||
+            i >= 2 && checkBoxes[1][2].isChecked && checkBoxes[2][2].isChecked && !marcadasBot[0][2]){
+            for (y in 0..2){
+                rango.add(Point(2,y))
+            }
+        }else if (i >= 2 && checkBoxes[0][0].isChecked && checkBoxes[1][1].isChecked && !marcadasBot[2][2] ||        // evitar D1
+            i >= 2 && checkBoxes[0][0].isChecked && checkBoxes[2][2].isChecked && !marcadasBot[1][1] ||
+            i >= 2 && checkBoxes[1][1].isChecked && checkBoxes[2][2].isChecked && !marcadasBot[0][0]){
+                for (j in 0..2){
+                    rango.add(Point(j,j))
+                }
+        }else if (i >= 2 && checkBoxes[0][2].isChecked && checkBoxes[1][1].isChecked && !marcadasBot[2][0] ||        // evitar D2
+            i >= 2 && checkBoxes[0][2].isChecked && checkBoxes[2][0].isChecked && !marcadasBot[1][1] ||
+            i >= 2 && checkBoxes[1][1].isChecked && checkBoxes[2][0].isChecked && !marcadasBot[0][2]){
+            var x = 2
+            for (y in 0..2){
+                    rango.add(Point(x,y))
+                x--
+            }
+        }
+        /**else if (i == 2 && checkBoxes[7].isChecked && checkBoxes[3].isChecked
             || i == 2 && checkBoxes[7].isChecked && checkBoxes[5].isChecked){
             rango = arrayOf(6,8)
         }else if (i == 2 && checkBoxes[1].isChecked && checkBoxes[3].isChecked
@@ -174,63 +236,33 @@ class Bot (val txtVictoriasBot: TextView){
             rango = arrayOf(4)
         }else if (checkBoxes[4].isChecked && i == 1){                                   //si empieza en el centro
             rango = arrayOf(0, 2, 6, 8)
-        }else if (i >= 2 && checkBoxes[2].isChecked && checkBoxes[5].isChecked && !marcadasBot[8]         // evitar 3ra linea vertical
-            || checkBoxes[2].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[5]
-            || checkBoxes[5].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[2]){
-            rango = arrayOf(2, 5, 8)
-        }else if (i >= 2 && checkBoxes[1].isChecked && checkBoxes[4].isChecked && !marcadasBot[7]         // evitar 2da linea vertical
-            || checkBoxes[1].isChecked && checkBoxes[7].isChecked && i >= 2 && !marcadasBot[4]
-            || checkBoxes[4].isChecked && checkBoxes[7].isChecked && i >= 2 && !marcadasBot[1]){
-            rango = arrayOf(1, 4, 7)
-        }else if (i >= 2 && checkBoxes[0].isChecked && checkBoxes[3].isChecked  && !marcadasBot[6]        // evitar 1ra linea vertical
-            || checkBoxes[0].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[3]
-            || checkBoxes[3].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[0]){
-            rango = arrayOf(0, 3, 6)
-        }else if (i >= 2 && checkBoxes[6].isChecked && checkBoxes[7].isChecked && !marcadasBot[8]         // evitar 3ra linea horizontal
-            || checkBoxes[6].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[7]
-            || checkBoxes[7].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[6]){
-            rango = arrayOf(6, 7, 8)
-        }
-        else if (i >= 2 && checkBoxes[3].isChecked && checkBoxes[4].isChecked && !marcadasBot[5]          // evitar 2da linea horizontal
-            || checkBoxes[3].isChecked && checkBoxes[5].isChecked && i >= 2 && !marcadasBot[4]
-            || checkBoxes[4].isChecked && checkBoxes[5].isChecked && i >= 2 && !marcadasBot[3]){
-            rango = arrayOf(3, 4, 5)
-        }
-        else if (i >= 2 && checkBoxes[0].isChecked && checkBoxes[1].isChecked && !marcadasBot[2]          // evitar 1ra linea horizontal
-            || checkBoxes[0].isChecked && checkBoxes[2].isChecked && i >= 2 && !marcadasBot[1]
-            || checkBoxes[1].isChecked && checkBoxes[2].isChecked && i >= 2 && !marcadasBot[0]) {
-            rango = arrayOf(0, 1, 2)
-        }else if (i >= 2 && checkBoxes[0].isChecked && checkBoxes[4].isChecked && !marcadasBot[8]         // evitar diagonal 1
-            || checkBoxes[0].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[4]
-            || checkBoxes[4].isChecked && checkBoxes[8].isChecked && i >= 2 && !marcadasBot[0]) {
-            rango = arrayOf(0, 4, 8)
-        }else if (i >= 2 && checkBoxes[2].isChecked && checkBoxes[4].isChecked && !marcadasBot[6]         // evitar diagonal 2
-            || checkBoxes[2].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[4]
-            || checkBoxes[4].isChecked && checkBoxes[6].isChecked && i >= 2 && !marcadasBot[2]){
-            rango = arrayOf(2, 4, 6)
         }else if (i == 2 && checkBoxes[0].isChecked && checkBoxes[4].isChecked && marcadasBot[8]
             || checkBoxes[8].isChecked && checkBoxes[4].isChecked && i == 2 && marcadasBot[0]
             || checkBoxes[2].isChecked && checkBoxes[4].isChecked && i == 2 && marcadasBot[6]
             || checkBoxes[4].isChecked && checkBoxes[6].isChecked && i == 2 && marcadasBot[2]){
             rango = arrayOf(0,2,6,8)
         }
+        */
         return rango
     }
-
-    fun lose(txtResult: TextView, checkBoxes: ArrayList<CheckBox>) {
+    fun lose(txtResult: TextView, checkBoxes: Array<Array<CheckBox>>) {
         txtVictoriasBot.text = ""+victoriasBot
         mensaje = "perdiste"
         txtResult.text = mensaje
-        for (checkBox: CheckBox in checkBoxes){
-            checkBox.isClickable = false
+        for (y in 0..2){
+            for (x in 0..2){
+                checkBoxes[y][x].isClickable = false
+            }
         }
     }
 
-    fun empate(txtResult: TextView, checkBoxes: ArrayList<CheckBox>) {
+    fun empate(txtResult: TextView, checkBoxes: Array<Array<CheckBox>>) {
         mensaje = "empate"
         txtResult.text = mensaje
-        for (checkBox: CheckBox in checkBoxes){
-            checkBox.isClickable = false
+        for (y in 0..2){
+            for (x in 0..2){
+                checkBoxes[y][x].isClickable = false
+            }
         }
     }
 

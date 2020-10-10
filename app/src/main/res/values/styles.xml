@@ -5,6 +5,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:fontFamily">casual</item>
+    </style>
+
+    <style name="AppTheme.Botton">
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:textSize">20sp</item>
+
+    </style>
+
+    <style name="AppTheme.TextTitle">
+        <item name="android:textSize">30sp</item>
     </style>
 
 </resources>

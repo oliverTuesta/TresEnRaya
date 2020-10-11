@@ -14,7 +14,10 @@
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:layout_margin">12dp</item>
         <item name="android:textSize">20sp</item>
+    </style>
 
+    <style name="AppTheme.CheckBoxStyle">
+        <item name="android:layout_margin">50dp</item>
     </style>
 
     <style name="AppTheme.TextTitle">

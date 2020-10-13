@@ -2,23 +2,22 @@ package com.example.tresenraya
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity() {
+class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_splash_screen)
 
-        //elimina el banner superior(action bar)
+        //oculta el action bar
         supportActionBar?.hide()
 
-        val btnRun: Button = findViewById(R.id.btnRun)
-        btnRun.setOnClickListener {
-            val intent = Intent(this, GameActivity::class.java)
+        Handler().postDelayed({
+            val intent = Intent(this@SplashScreen, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }
+        }, 2000)
 
     }
 }

@@ -32,6 +32,9 @@ class GameActivity : AppCompatActivity() {
         val txtVictoriasBot: TextView = findViewById(R.id.txtVictoriasBot)
         val modoExperto: Switch = findViewById(R.id.switch2)
 
+        //elimina el banner superior(action bar)
+        supportActionBar?.hide()
+
         val lados = 3
 
         val x1 = arrayOf(checkBox0, checkBox1, checkBox2)

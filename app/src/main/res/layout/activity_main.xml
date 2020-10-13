@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     tools:context=".MainActivity">
 
     <ImageView
@@ -19,8 +18,9 @@
 
     <Button
         android:id="@+id/btnRun"
-        style="@style/AppTheme.Botton"
+        android:background="@drawable/switch_btn"
         android:text="Iniciar"
+        android:layout_margin="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

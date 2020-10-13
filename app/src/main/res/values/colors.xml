@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="yellow">#f2cc8f</color>
-    <color name="green">#81b29a</color>
+
     <color name="colorPrimary">#f4f1de</color>
     <color name="colorPrimaryDark">#f2cc8f</color>
     <color name="colorAccent">#3d405b</color>
+    
+    <color name="mainText">#3d5a80</color>
+    <color name="mainBackground">#f4f1de</color>
 </resources>
